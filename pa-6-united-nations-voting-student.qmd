@@ -76,7 +76,7 @@ Here is each data set and its description (you might want to look at the Tidy Tu
 
 
 ```{r}
-#| label: load-data
+#| label: load-unvotes
 unvotes <- read_csv("data/unvotes.csv")
 ```
 
@@ -98,6 +98,7 @@ unvotes <- read_csv("data/unvotes.csv")
 
 
 ```{r}
+#| label: load-rollcalls
 #edit to read in roll_calls
 roll_calls <- read_csv("data/roll_calls.csv")
 ```
@@ -113,6 +114,7 @@ roll_calls <- read_csv("data/roll_calls.csv")
 |issue      |integer   | Descriptive issue name |
 
 ```{r}
+#| label: load-issues
 #edit to read in issues
 issues <- read_csv("data/issues.csv")
 ```
@@ -135,30 +137,31 @@ The first data set, `unvotes` contains data on the `rcid` which is the roll call
 Comment on the following code, what is happening in each line?  One way to approach seeing what each line does is to highlight the code from before the `pipe` of that line up to the data `unvotes` and use `CTRL + ENTER` to run just the highlighted lines.  
 
 ```{r}
+#| label: voting-record-graph
 unvotes |> 
-  count(country, vote) |> #comment
-  group_by(country) |> #comment
-  mutate(total = sum(n)) |> #comment 
-  mutate(prop_vote = n/total) |> #comment
+  count(country, vote) |> #take the count of yes/no/abstain votes for each country
+  group_by(country) |> #group by country
+  mutate(total = sum(n)) |> #new variable for the total number of votes
+  mutate(prop_vote = n/total) |> #create new variable for the proportion of yes/no/abstain votes for each country
   filter(country %in% c("United States", "Canada", 
                         "Germany", "France",
                         "Italy", "Japan",
-                        "United Kingdom")) |> #comment
+                        "United Kingdom")) |> #filter for just those countries
   ggplot(aes(x = country, y = prop_vote, 
-             fill = vote)) + #comment
-  geom_col(position = position_stack()) + #comment
+             fill = vote)) + #applying aesthetics to make a graph
+  geom_col(position = position_stack()) + #specifying the geometry and position
   labs(x = "Group of Seven Countries",
        y = "Proportion of Votes",
        title = "Voting Record of the G7",
-       fill = "Vote") + #comment
-  theme_minimal() +  #comment
-  scale_fill_viridis_d(end = 0.8) + #comment
-  coord_flip() #comment
+       fill = "Vote") + #adding labels
+  theme_minimal() +  #adding a theme
+  scale_fill_viridis_d(end = 0.8) + #specifying colors
+  coord_flip() #changing the plot's orientation
 ```
 
 > Describe what the graph above demonstrates above UN voting records for the G7 
   
-  
+> All countries except the US tend to vote yes more than no/abstaining.
   
   
 
