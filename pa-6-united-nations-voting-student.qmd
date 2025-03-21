@@ -291,17 +291,18 @@ Now that we know how to join the data, we will use the following code to examine
 
 Be sure to run the code via the green arrow on the code chunk, as the `case_when()` code can get finicky sometimes and claim an error about a comma in the code when it doesn't exist.  *Comment on the code where indicated* and add your chosen join function
 ```{r}
+#| label: issues-votes-graph
 roll_calls |> 
-  _________(issues, by = "rcid") |>  #join roll_calls and issues so that just the votes related to the issues data are retained.
+  right_join(issues, by = "rcid") |>  #join roll_calls and issues so that just the votes related to the issues data are retained.
   mutate(issue = case_when(
     issue == "Arms control and disarmament" ~ "Arms Control",
     issue == "Nuclear weapons and nuclear material" ~ "Nuclear Weapons",
-    issue == "Palestinian conflict" ~ "Palestinian Conflict")) |>   #what is happening in this mutate function?
+    issue == "Palestinian conflict" ~ "Palestinian Conflict")) |>   #Shortening names of issues
   drop_na(issue) |> #drop NAs for values not defined in the previous line of code
   mutate(year = lubridate::year(date)) |> #create a column `year` that contains the year value
-  count(year, issue) |> #what does this line do?
-  ggplot(aes(x = year, y = n, group = issue)) + #what does this line do?
-  geom_line(aes(color = issue)) + #what does this line do?
+  count(year, issue) |> #counts number of issues per year
+  ggplot(aes(x = year, y = n, group = issue)) + #specifying aesthetics for graph
+  geom_line(aes(color = issue)) + #specifying geometry and wants colors to be mapped with issue
   labs(x = "Year", y = "Number of Votes",
        title = "United Nations Votes per Year",
        subtitle = "Conflict and Arms Related Votes",
@@ -315,7 +316,7 @@ roll_calls |>
 What do you notice? What do you wonder based on the graph created?
 > Insert Answer Here
 
-
+> There was a spike in voting number of votes around 1980 then went down but spiked again around 2020. We wonder was there more countries that joined in the 80's or were there a higher number of issues.
 
 
 <!-- Swap roles -- Developer becomes Coder, Coder becomes Developer! -->
