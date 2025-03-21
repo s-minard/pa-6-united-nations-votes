@@ -175,17 +175,19 @@ unvotes |>
 The second data set, `roll_calls` has more information on the type of vote, the importance, whether it was a resolution, and date of the vote.  What does eh following code do?
 
 ```{r}
+#| label: distinct-short
 roll_calls |> 
   distinct(short)
 ```
 
 > Description of code results
 
-
+> Code gives us all the distinct values of the short variable
 
 We can use the individual data for `roll_calls` to look at the number of votes per year over time.
 
 ```{r}
+#| label: votes-per-year
 roll_calls |> 
   mutate(year = lubridate::year(date)) |> #extracts the year from the date value and creates a new `year` column
   count(year) |> #counts how many votes there were per year assuming each line is an single voting instance
@@ -202,10 +204,12 @@ What information is missing from the above graphic that might be useful in under
 
 > Insert Answer Here
 
+> Adding issues they are voting on, and which countries are voting, if they are amendments or not
 
 
 We could try and look at the short descriptions, `short`, for each vote with the following code. 
 ```{r}
+#| label: description-short
 roll_calls |> 
   count(short)
 ```
@@ -214,7 +218,7 @@ Does the above information help us understand the voting issues of the UN over t
 
 > Insert your answer here
 
-
+> Theres too much data so it doesn't help us understand the voting issues over time.
 
 <!-- Swap roles -- Developer becomes Coder, Coder becomes Developer! -->
 
