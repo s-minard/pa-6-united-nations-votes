@@ -180,8 +180,6 @@ roll_calls |>
   distinct(short)
 ```
 
-> Description of code results
-
 > Code gives us all the distinct values of the short variable
 
 We can use the individual data for `roll_calls` to look at the number of votes per year over time.
@@ -202,8 +200,6 @@ roll_calls |>
 
 What information is missing from the above graphic that might be useful in understanding the issues the UN commonly votes on?
 
-> Insert Answer Here
-
 > Adding issues they are voting on, and which countries are voting, if they are amendments or not
 
 
@@ -215,8 +211,6 @@ roll_calls |>
 ```
 
 Does the above information help us understand the voting issues of the UN over time? Explain.
-
-> Insert your answer here
 
 > Theres too much data so it doesn't help us understand the voting issues over time.
 
@@ -314,7 +308,6 @@ roll_calls |>
 
 
 What do you notice? What do you wonder based on the graph created?
-> Insert Answer Here
 
 > There was a spike in voting number of votes around 1980 then went down but spiked again around 2020. We wonder was there more countries that joined in the 80's or were there a higher number of issues.
 
@@ -330,27 +323,27 @@ We want to join all three data sets together, *maintaining only the votes for wh
 
 ```{r}
 un_full <- unvotes |> 
-  _________(issues, by = "rcid") |> 
-  _________(roll_calls, by = "rcid") 
+  right_join(issues, by = "rcid") |> 
+  left_join(roll_calls, by = "rcid") 
 
-#View(un_full)
+View(un_full)
 ```
 
 
 Now, we are going to do some data cleaning.  Our goal is create a data set that includes the percentage of "yes" votes per country each year. Fill in the missing _________ with the correct verbs. We will call the data table `yes_votes`
 ```{r}
 yes_votes <- un_full |> 
-  _________(country, issue, date, vote) |>  #keep just the columns for country, issue, date, vote
-  _________(year = lubridate::year(date)) |> #create a new variable called year
-  _________(country, year, issue) |> #group country, year, issue together to prepare for subsequent analysis
-  _________(percent_yes = mean(vote == "yes")) |> #calculate the proportion of yes votes
-  _________(issue = case_when(
+  select(country, issue, date, vote) |>  #keep just the columns for country, issue, date, vote
+  mutate(year = lubridate::year(date)) |> #create a new variable called year
+  group_by(country, year, issue) |> #group country, year, issue together to prepare for subsequent analysis
+  mutate(percent_yes = mean(vote == "yes")) |> #calculate the proportion of yes votes
+  mutate(issue = case_when(
     issue == "Arms control and disarmament" ~ "Arms Control",
     issue == "Nuclear weapons and nuclear material" ~ "Nuclear Weapons",
     issue == "Palestinian conflict" ~ "Palestinian Conflict",
     TRUE ~ issue)) #create/overwrite issue column with simpler values
 
-#View(yes_votes) #you can use this code to look at the table created
+View(yes_votes) #you can use this code to look at the table created
 ```
 
 
@@ -358,7 +351,7 @@ Now write the clean data `yes_votes` to a new data set in the data folder so we 
 
 
 ```{r}
-_____csv(yes_votes, "_____/yes_votes.csv")
+write_csv(yes_votes, "data/data-clean/yes_votes.csv")
 ```
 
 
@@ -368,29 +361,29 @@ Now we can feed the `yes_votes` transformed data table into your graphing code, 
 
 ```{r}
 yes_votes |> 
-  filter(country %in% c("United States","Canada")) |> # your comment here
-  ggplot(mapping = aes(x = year, y = percent_yes, color = country)) + # your comment here
-  geom_point(alpha = 0.4) + # your comment here
+  filter(country %in% c("United States","Canada")) |> # filter for US and Canada
+  ggplot(mapping = aes(x = year, y = percent_yes, color = country)) + # specify aesthetics for the graph
+  geom_point(alpha = 0.4) + # make the points transparent
   #geom_line(aes(group = country)) +
   geom_smooth(method = "loess", se = FALSE) + #this fits a special model called a loess regression, a smooth line that fits the data
-  facet_wrap(~issue) + # your comment here
-  scale_y_continuous(labels = scales::percent) + #your comment here
+  facet_wrap(~issue) + # facet by issue
+  scale_y_continuous(labels = scales::percent) + #changes the y axes to show percent not proportion
   labs(
     title = "Percentage of 'Yes' votes in the UN General Assembly",
     subtitle = "1946 to 2015",
     y = "% Yes",
     x = "Year",
     color = "Country"
-  ) + #your comment here
+  ) + #adds labels
   theme_bw() +
-  theme(legend.position = "bottom") + #your comment here 
-  scale_color_viridis_d(option = "turbo") #your comment here
+  theme(legend.position = "bottom") + #puts the legend on the bottom
+  scale_color_viridis_d(option = "turbo") #specifies the color scheme
 ```
 
 
 What do you notice about the voting records over time? 
 
->Insert Answer Here
+>Usually CA votes yes more often, but the gaps are closing. 
 
 
 
