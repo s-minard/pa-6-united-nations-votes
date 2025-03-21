@@ -227,6 +227,7 @@ Does the above information help us understand the voting issues of the UN over t
 Finally we have the `issues` data which provides a more general description for each vote on specific issues.  Note that not all issues are included in the data set, just the ones related to the 6 issues below:
 
 ```{r}
+#| label: count-issues
 issues |> 
   count(issue)
 ```
@@ -240,40 +241,45 @@ Now let's join our data together to get a better idea of how the UN has voted ov
 First, look at the number of rows in `issues` and `roll_calls` - do they match? What does this indicate?
 
 ```{r}
+#| label: dim-issues-rollcalls
 dim(issues)
 dim(roll_calls)
 ```
 
 
-> Insert Answer Here
+> They do not match. There are more rows in roll calls than in issues. 
 
 
 
 Now let's try joining the `roll_calls` with the `issues` data.  Compare the following codes to join the data. Describe what each one does and how it differs from the others as a comment in the code chunk.  You might need to reference the slides or reading for this week.
 
 ```{r}
+#| label: left-join-rollcalls-issues
 roll_calls |> 
-  left_join(issues, by = "rcid") #description of join
+  left_join(issues, by = "rcid") #everything in roll_calls is preserved in the output, and if there isn't a matching value in issues, it is assigned NA
 ```
 
 ```{r}
+#| label: right-join-rollcalls-issues
 roll_calls |> 
-  right_join(issues, by = "rcid") #description of join
+  right_join(issues, by = "rcid") #keeping everything in issues and adding values from roll_calls that match ricd. Everything in issues is preserved in the output, and if there isn't a matching value in roll_calls it is assigned NA
 ```
 
 ```{r}
+#| label: full-join-rollcalls-issues
 roll_calls |> 
-  full_join(issues, by = "rcid") #description of join
+  full_join(issues, by = "rcid") #everything in both roll_calls and issues is kept
 ```
 
 ```{r}
+#| label: inner-join-rollcalls-issues
 roll_calls |> 
-  inner_join(issues, by = "rcid") #description of join
+  inner_join(issues, by = "rcid") #keeps everything they have in common, drops values that don't have a match
 ```
 
 **If we are only interested in retaining the records associated with the `issues` labeled in our data, which join(s) should we use?**
 
-> Insert answer here
+> Right join
 
 
 
