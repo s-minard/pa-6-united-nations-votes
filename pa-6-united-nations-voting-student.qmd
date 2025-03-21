@@ -76,6 +76,7 @@ Here is each data set and its description (you might want to look at the Tidy Tu
 
 
 ```{r}
+#| label: load-data
 unvotes <- read_csv("data/unvotes.csv")
 ```
 
@@ -98,7 +99,7 @@ unvotes <- read_csv("data/unvotes.csv")
 
 ```{r}
 #edit to read in roll_calls
-roll_calls <- read_csv("__________")
+roll_calls <- read_csv("data/roll_calls.csv")
 ```
 
 
@@ -113,7 +114,7 @@ roll_calls <- read_csv("__________")
 
 ```{r}
 #edit to read in issues
-
+issues <- read_csv("data/issues.csv")
 ```
 
 
